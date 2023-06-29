@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import personService from './services/persons'
 
 const Filter = ({filterText, handleChangeFilter}) => {
   return <div>filter shown with <input type="text" value={filterText} onChange={handleChangeFilter}/></div>
@@ -19,8 +19,13 @@ const PersonForm = ({newName, newNum, handleChange, handleChangeNum, handleAdd})
   </form>
 }
 
-const Persons = ({persons, filterText}) => {
-  return <>{ persons.filter(person => person.name.includes(filterText)).map(person => <p key={person.name}>{ person.name } { person.number }</p>) }</>
+const Person = ({person, handleDelete}) => {
+  console.log(handleDelete)
+  return (<p>{ person.name } { person.number } <button onClick={() => handleDelete(person.id)}>delete</button></p>)
+}
+
+const Persons = ({persons, filterText, handleDelete}) => {
+  return <>{ persons.filter(person => person.name.includes(filterText)).map(person => <Person key={person.name} person={person} handleDelete={handleDelete} />) }</>
 }
 
 const App = () => {
@@ -30,8 +35,7 @@ const App = () => {
   const [filterText, setFilterText] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    personService.getAll()
       .then((res) => {
         setPersons(res.data)
       })
@@ -45,6 +49,7 @@ const App = () => {
       return
     }
     setPersons([...persons, { name: newName, number: newNum}])
+    personService.create({ name: newName, number: newNum})
   }
 
   const handleChange = (event) => {
@@ -59,6 +64,12 @@ const App = () => {
     setFilterText(event.target.value)
   }
 
+  const handleDelete = (id) => {
+    personService.remove(id).then(() => {
+      setPersons(persons.filter((val) => val.id !== id))
+    }).catch(()=>{})
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -66,7 +77,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm newName={newName} newNum={newNum} handleChangeNum={handleChangeNum} handleChange={handleChange} handleAdd={handleAdd} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterText={filterText}/>
+      <Persons handleDelete={handleDelete} persons={persons} filterText={filterText}/>
     </div>
   )
 }
