@@ -3,6 +3,14 @@ import axios from 'axios'
 
 const END_POINT = 'https://restcountries.com/v3.1/all'
 
+const ZERO_K = 273.15
+
+async function getWeather(city) {
+  const WEATHER_END_POINT = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${process.env.REACT_APP_API_KEY}`
+  const data = await axios.get(WEATHER_END_POINT).then(res => res.data).catch((error) => { console.log(error); return error})
+  return data
+}
+
 function toLower(s) {
   return s.toLowerCase()
 }
@@ -19,6 +27,18 @@ const CountryWithButton = ({country}) => {
 }
 
 const Country = ({country}) => {
+  const [temp, setTemp] = useState(0)
+  const [iconUrl, setIconUrl] = useState('')
+
+  useEffect(() => {
+    getWeather(country.capital).then(data => {
+      setTemp(data.main.temp - ZERO_K)
+      setIconUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
   return (
     <>
       <h1>{country.name.common}</h1>
@@ -29,8 +49,9 @@ const Country = ({country}) => {
         {Object.values(country.languages).map(lang => <li key={lang}>{lang}</li>)}
       </ul>
       <img src={country.flags.png} alt={country.flags.alt} />
-      <h2>Weather in Helsinki</h2>
-      <p>temperature -3.73 Celcius</p>
+      <h2>Weather in {country.capital}</h2>
+      <p>temperature {temp.toFixed(2)} Celcius</p>
+      <img src={iconUrl} />
     </>
   )
 }
