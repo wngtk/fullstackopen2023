@@ -30,3 +30,28 @@ https://reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables
 
 Do Not Define Components Within Components.
 由于React在每次渲染时都将定义在另一个组件内的组件视为一个新的组件。这使得React无法优化该组件。
+
+前端项目的 `package.json` 中的 `proxy` 可以使得前端使用相对路径 API，访问运行在另外一个端口或者机器的后端服务。
+
+一个简单的前端项目的目录结构：
+```
+src
+├── App.js
+├── components/   # 组件文件夹
+└── services/     # 与后端通信的代码（单一责任原则）
+```
+
+本着单一责任原则，将通信部分的代码提取到自己的模块是明智的。
+
+一个简单的后端项目的目录结构：
+```
+.
+├── build
+├── index.js
+├── models/             # 使用 Mongoose 的具体代码
+├── mongo.js            # 测试连接 mongoDB
+├── package-lock.json
+├── package.json
+└── requests/           # Rest Client test
+```
+models/ 文件夹放和数据库相关的代码。
