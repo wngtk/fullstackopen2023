@@ -8,8 +8,8 @@ const Notification = ({ message }) => {
   return <div className="prompt">{message}</div>
 }
 
-const CriticalMessageBox = ({ message}) => {
-  return <div className='error'>{ message }</div>
+const CriticalMessageBox = ({ message }) => {
+  return <div className="error">{message}</div>
 }
 
 const App = () => {
@@ -45,14 +45,22 @@ const App = () => {
             return val
           }
         })
-        phonebookService.update(newPersonId, newPerson).then(() => {
-          setPersons(newPersons)
-        }).catch(() => {
-          setErrorMsg('Information of ' + newPerson.name + ' has already been removed from server')
-          setTimeout(() => {
-            setErrorMsg('')
-          }, 2000);
-        })
+
+        phonebookService
+          .update(newPersonId, newPerson)
+          .then(() => {
+            setPersons(newPersons)
+          })
+          .catch(() => {
+            setErrorMsg(
+              'Information of ' +
+                newPerson.name +
+                ' has already been removed from server'
+            )
+            setTimeout(() => {
+              setErrorMsg('')
+            }, 2000)
+          })
       }
     }
 
