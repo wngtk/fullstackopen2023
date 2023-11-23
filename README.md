@@ -55,3 +55,42 @@ src
 └── requests/           # Rest Client test
 ```
 models/ 文件夹放和数据库相关的代码。
+
+<details>
+
+<summary>用 NodeJS 和 Express 写服务端程序</summary>
+
+Part 3 用 NodeJS 和 Express 写服务端程序，用到了一些库：
+```
+- cors      # 启用跨源资源共享
+- dotenv    # 用于读取 .env 中的秘密信息
+- express   # 一个很友好的 Node 服务端开发库
+- mongoose  # 连接使用 MongoDB
+- morgan    # 日志打印的中间件
+```
+
+Express 是一个路由和中间件的 web 框架，一个 Express 应用就是一系列的中间件函数调用。中间件是可以用来处理 request 和 response 对象的函数。在实践中，你可以同时使用几个中间件。当你有多个中间件时，它们会按照在 Express 中被使用的顺序一个一个地被执行。中间件是一个接收三个参数的函数。
+
+中间件函数示例：
+```js
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+```
+
+Express 内置的中间件：
+```js
+const express = require('express')
+const app = express()
+
+app.use(express.josn())  // josn-parser
+app.use(express.static('./build'))  // 服务静态文件
+```
+
+json-parser 从请求中获取原始数据，这些数据存储在 request 对象中，将其解析为一个 JavaScript 对象，并将其作为一个新的属性 body 分配给 request 对象。每当express收到一个HTTP GET请求时，它将首先检查build目录中是否包含一个与请求地址相对应的文件。如果找到了正确的文件，express将返回它。
+
+</details>
