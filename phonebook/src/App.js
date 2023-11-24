@@ -71,6 +71,9 @@ const App = () => {
           setAddMsg('')
         }, 2000)
       })
+      .catch(error => {
+        console.log(error)
+      })
     }
   }
 
