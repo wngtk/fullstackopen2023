@@ -93,4 +93,10 @@ app.use(express.static('./build'))  // 服务静态文件
 
 json-parser 从请求中获取原始数据，这些数据存储在 request 对象中，将其解析为一个 JavaScript 对象，并将其作为一个新的属性 body 分配给 request 对象。每当express收到一个HTTP GET请求时，它将首先检查build目录中是否包含一个与请求地址相对应的文件。如果找到了正确的文件，express将返回它。
 
+错误作为参数被传递给 next 函数。如果 next 被调用时没有参数，那么将简单地继续执行下一个路由或中间件。如果 next 函数有参数，那么将执行 错误处理中间件。
+
+注意错误处理中间件必须是最后一个载入的中间件！
+
+在课程的示例代码中路由处理是 MVC 的 Controller，数据校验交给 Model 部分的代码处理。
+
 </details>
