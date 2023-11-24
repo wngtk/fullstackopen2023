@@ -1,13 +1,14 @@
-require('dotenv').config()
-const express = require("express");
-const morgan = require("morgan");
-const cors = require('cors');
-const Person = require('./models/person')
-const app = express();
+require("dotenv").config()
+const express = require("express")
+const morgan = require("morgan")
+const cors = require("cors")
+const process = require("process")
+const Person = require("./models/person")
+const app = express()
 
 app.use(cors())
-app.use(express.static('build'))
-app.use(express.json());
+app.use(express.static("build"))
+app.use(express.json())
 app.use(
   morgan(function (tokens, req, res) {
     return [
@@ -19,63 +20,41 @@ app.use(
       tokens["response-time"](req, res),
       "ms",
       JSON.stringify(req.body)
-    ].join(" ");
+    ].join(" ")
   })
-);
+)
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then(persons => {
-    res.json(persons);
+    res.json(persons)
   })
-});
+})
 
 const nextId = () => {
-  return Math.floor(Math.random() * 1e20);
-};
+  return Math.floor(Math.random() * 1e20)
+}
 
 app.post("/api/persons", (req, res, next) => {
-  const body = req.body;
+  const body = req.body
   if (!body.name || !body.number) {
     return res.status(400).json({
       error: "mssing name or number",
-    });
+    })
   }
 
   const person = new Person({
     id: nextId(),
     name: body.name,
     number: body.number,
-  });
+  })
 
   person.save()
     .then(savedPerson => {
       res.json(savedPerson)
     })
     .catch(error => next(error))
-});
+})
 
 app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
@@ -87,7 +66,7 @@ app.get("/api/persons/:id", (req, res, next) => {
       }
     })
     .catch(error => next(error))
-});
+})
 
 app.put("/api/persons/:id", (req, res, next) => {
   const body = req.body
@@ -97,7 +76,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
+  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: "query" })
     .then(updatedPerson => {
       res.json(updatedPerson)
     })
@@ -106,27 +85,27 @@ app.put("/api/persons/:id", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
-});
+})
 
 app.get("/info", (req, res, next) => {
   Person.find({})
     .then(persons => {
       res.send(`<p>Phonebook has info for ${persons.length} people</p>
-        <p>${new Date()}</p>`);
+        <p>${new Date()}</p>`)
     })
     .catch(error => next(error))
-});
+})
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationError') {
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" })
+  } else if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message })
   }
 
@@ -135,7 +114,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})

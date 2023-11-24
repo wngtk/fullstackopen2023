@@ -21,6 +21,7 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "eslint": "^8.54.0",
     "nodemon": "^3.0.1"
   }
 }
