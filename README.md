@@ -33,7 +33,7 @@ https://reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables
 Do Not Define Components Within Components.
 由于React在每次渲染时都将定义在另一个组件内的组件视为一个新的组件。这使得React无法优化该组件。
 
-前端项目的 `package.json` 中的 `proxy` 可以使得前端使用相对路径 API，访问运行在另外一个端口或者机器的后端服务。
+~前端项目的 `package.json` 中的 `proxy` 可以使得前端使用相对路径 API，访问运行在另外一个端口或者机器的后端服务。~ 更现代的方式是使用 vite.config.js 中声明 vite server proxy。
 
 一个简单的前端项目的目录结构：
 ```
