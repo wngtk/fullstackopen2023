@@ -24,6 +24,8 @@ const App = () => {
 
 如果组件在你认为应该渲染的时候没有渲染，或者在 "错误的时间 "渲染，你可以通过将组件的变量值记录到控制台来调试应用。
 
+> we recommend to split state into multiple state variables based on which values tend to change together.
+
 最简单和最好的方法是通过多次使用useState函数来创建独立的状态 "片段"。
 https://reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables
 我个人的理解是，一起更新的最小的状态创建一个状态。比方说FQA里面提到的，left和top是每次更新都要更新的，那就left和top放在一个状态里面在一起。课程里面的更新状态，一次只会更新left或者right，那就为left和right各自创建一个状态。
